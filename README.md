@@ -1,2 +1,3 @@
 # binance-candle-data
-Functions used to generate csv files of historic candle from Binance
+
+A small utility class and function used for fetching large amounts of historic candlestick data from the Binance API. 
