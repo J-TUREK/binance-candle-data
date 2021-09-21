@@ -23,13 +23,17 @@ class Secret:
 
 Calculate the number of API calls required to generate the required data:
 ```
-LIMIT = 500 # The Binance API request limit per call is 500
+interval = "15m"
+first_datetime = datetime(2017, 1, 1, 0, 0)
+last_datetime = datetime.utcnow()
 
 number_of_datapoints = BinanceUtils.get_number_of_candles_between_datetimes(interval, start_datetime, end_datetime)
 
+LIMIT = 500 # The Binance API request limit per call is 500
 number_of_calls = math.ceil(number_of_datapoints / LIMIT)
+print(f"{number_of_calls} API calls required")
 
-print("Shit, that's a lot of calls")
+>> 329 API calls required
 ```
 Generate a pandas DataFrame and save the result as a csv using pandas built-in method
 ```
@@ -46,5 +50,7 @@ x = get_candle_data_between_datetimes(symbol, interval, first_datetime, last_dat
 >>> Requires 17 API calls to complete the requirement.
 >>> Request should take approximately 21.25s
 
-x.to_csv(f"{symbol}{interval}{str(first_datetime)}{str(last_datetime)}")
+first_datetime_date = BinanceUtils.convert_timestamp_to_utc_string(x["timestamp"][0]).strftime("%Y%m%d")
+last_datetime_date = last_datetime.strftime("%Y%m%d")
+x.to_csv(f"{symbol}{interval}{first_datetime_date}-{last_datetime_date}.csv")
 ```
